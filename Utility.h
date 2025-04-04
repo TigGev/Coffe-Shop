@@ -2,6 +2,8 @@
 #define UTILITY_H
 #include <iostream>
 
+enum class OrderType {MOBILE, CASHIER, KIOSK};
+
 namespace Utility {
     int validationInput(int from, int to) {
         int input;
@@ -20,7 +22,9 @@ namespace Utility {
         std::cout << "1. +Shugar\n"
         << "2. +Caramel\n"
         << "3. +Milk\n"
-        << "4. +Whipped cream\n";
+        << "4. +Whipped cream\n"
+        << "5. Order\n>";
+        
     }
 }
 

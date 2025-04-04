@@ -8,63 +8,44 @@ class Order {
         static int UniqOrderNo;
         int m_OrderNo;
         std::string m_address;
+        Beverage* m_bev;
     public:
-        Order(std::string address) : m_OrderNo(UniqOrderNo++), m_address(address) {}
-        virtual ~Order() {};
-        virtual void displayOrder() = 0;
+        Order(const std::string& address, Beverage* beverage) : m_OrderNo(UniqOrderNo++), m_address(address), m_bev(beverage) {}
+        virtual ~Order() { delete m_bev;};
+        virtual void displayOrder() {
+            std::cout << "\033[32m" << "Order from " << m_address << ": " << m_bev->getDescription() << " - " << m_bev->getCost() << "$\n"
+            << "Thank you for order!\n" << "\033[0m" << std::endl;
+        };
+        
 };
 
 int Order::UniqOrderNo = 1;
 
 class Mobile: public Order {
     public:
-        Mobile(std::string address) : Order(address) {}
-        virtual void displayOrder() override {
-            std::cout << "Order made from: " << m_address << "\n"
-            << "----------------------------------\n"
-            << "             ORDER " << m_OrderNo << std::endl;
-        }
+        Mobile( Beverage* beverage) : Order("www.CoffeShop.com", beverage) {}
 };
 
 class Cashier: public Order {
     public:
-        Cashier(std::string address) : Order(address) {}
-        virtual void displayOrder() override {
-            std::cout << "The order was made from the mobile site: " << m_address << "\n"
-            << "----------------------------------\n"
-            << "             ORDER " << m_OrderNo << std::endl;
-        }
+    Cashier(Beverage* beverage) : Order("Cashier", beverage) {}
 };
 
 class Kiosk: public Order {
     public:
-        Kiosk(std::string address) : Order(address) {}
-        virtual void displayOrder() override {
-            std::cout << "Order placed at kiosk on " << m_address << "\n"
-            << "----------------------------------\n"
-            << "             ORDER " << m_OrderNo << std::endl;
-        }
+    Kiosk(Beverage* beverage) : Order("Kiosk", beverage) {}
 };
+
 
 class OrderCreator {
-    public:
-        virtual ~OrderCreator() {}
-        virtual Order* createOrder(std::string address) = 0;
-};
-
-class MobileCreator: public OrderCreator {
-    public:
-        virtual Order* createOrder(std::string address) override { return new Mobile(address); }
-};
-
-class CashierCreator: public OrderCreator {
-    public:
-        virtual Order* createOrder(std::string address) override { return new Cashier(address); }
-};
-
-class KioskCreator: public OrderCreator {
-    public:
-        virtual Order* createOrder(std::string address) override { return new Kiosk(address); }
+    public: 
+        Order* createOrder(OrderType type, Beverage* beverage) { 
+            switch (type) {
+                case OrderType::CASHIER: return new Cashier(beverage); break;
+                case OrderType::MOBILE: return new Mobile(beverage); break;
+                case OrderType::KIOSK: return new Kiosk(beverage); break;
+            }
+        }
 };
 
 #endif

@@ -3,55 +3,29 @@
 #include <string>
 
 class Beverage {
-    // protected:
-    //     std::string m_name;
-    //     double m_cost;
     public:
-        virtual ~Beverage() {};`
+        Beverage() = default;
+        virtual ~Beverage() {};
         virtual std::string getDescription() const = 0;
         virtual double getCost() const = 0;
 };
 
 class Espresso: public Beverage {
     public:
-        Espresso() : Beverage("Espresso", 3) {}
-        virtual std::string getDescription() const override {return m_name;}
-        virtual double getCost() const override {return m_cost;}
+        virtual std::string getDescription() const override {return "Espresso";}
+        virtual double getCost() const override {return 1.5;}
 };
 
 class Latte: public Beverage {
     public:
-        Latte() : Beverage("Latte", 8) {}
-        virtual std::string getDescription() const override {return m_name;}
-        virtual double getCost() const override {return m_cost;}
+        virtual std::string getDescription() const override {return "Latte";}
+        virtual double getCost() const override {return 4.0;}
 };
 
 class GreenTea: public Beverage {
     public:
-        GreenTea() : Beverage("Green-tea", 4) {}
-        virtual std::string getDescription() const override {return m_name;}
-        virtual double getCost() const override {return m_cost;}
-};
-
-class BevCreator {
-    public:
-        virtual ~BevCreator() {};
-        virtual Beverage* createBeverage() = 0;
-};
-
-class EspCreator: public BevCreator {
-    public:
-    virtual Beverage* createBeverage() override { return new Espresso(); }
-};
-
-class LatteCreator: public BevCreator {
-    public:
-    virtual Beverage* createBeverage() override { return new Latte(); }
-};
-
-class TeaCreator: public BevCreator {
-    public:
-    virtual Beverage* createBeverage() override { return new GreenTea(); }
+        virtual std::string getDescription() const override {return "Green tea";}
+        virtual double getCost() const override {return 2.0;}
 };
 
 class Decorator: public Beverage {
@@ -60,8 +34,8 @@ class Decorator: public Beverage {
     public:
         Decorator(Beverage* bev) : m_bev(bev) {}
         virtual ~Decorator() {}
-        virtual std::string getDescription() const override { m_bev->getDescription(); }
-        virtual double getCost() const override { m_bev->getCost(); }
+        virtual std::string getDescription() const override = 0;
+        virtual double getCost() const override = 0;
 };
 
 class Caramel: public Decorator {
@@ -82,7 +56,7 @@ class Shugar : public Decorator {
     public:
         Shugar(Beverage* bev) : Decorator(bev) {}
         virtual std::string getDescription() const override { return m_bev->getDescription() + ", Shugar"; }
-        // virtual double getCost() const override { return m_bev->getCost();}
+        virtual double getCost() const override { return m_bev->getCost(); } //for free
 };
 
 class WhippedCream: public Decorator {
